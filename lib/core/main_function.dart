@@ -1,6 +1,7 @@
 import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -19,11 +20,27 @@ class MainFunction {
     box.remove(key);
   }
 
+  FlutterSecureStorage storage = FlutterSecureStorage(
+    aOptions: const AndroidOptions(encryptedSharedPreferences: true),
+  );
+
+  Future<void> onSW({required String key, required String value}) async {
+    await storage.write(key: key, value: value);
+  }
+
+  Future<String> onSR({required String key, String? dv}) async {
+    return await storage.read(key: key) ?? dv ?? '';
+  }
+
+  Future<void> onSD({required String key}) async {
+    await storage.delete(key: key);
+  }
+
   void onChangeTheme() {
-    bool cacheTheme = f.onBR(key: Config.theme);
+    bool cacheTheme = f.onBR(key: Config.boolTheme);
     bool reverse = !cacheTheme;
     ThemeMode themeMode = reverse ? ThemeMode.light : ThemeMode.dark;
-    f.onBW(key: Config.theme, value: reverse);
+    f.onBW(key: Config.boolTheme, value: reverse);
     Get.changeThemeMode(themeMode);
   }
 

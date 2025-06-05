@@ -1,6 +1,5 @@
 import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
-import 'package:exchange/features/presentation/daftar/daftar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,17 +14,14 @@ class AuthGetx extends GetxController {
     });
   }
 
-  void onGoogleLogin() async {
-    Get.to(() => DaftarPage());
-  }
-
   void doChangeTheme() {
     f.onChangeTheme();
     onCheckTheme();
   }
 
   void onCheckTheme() {
-    bool cacheTheme = f.onBR(key: Config.theme);
-    isLight.value = cacheTheme;
+    isLight.value = f.onBR(key: Config.boolTheme);
   }
+
+  void onGoogleLogin() async {}
 }

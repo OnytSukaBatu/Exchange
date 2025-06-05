@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "767294093624",
+    "project_id": "exchange-elsan",
+    "storage_bucket": "exchange-elsan.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767294093624:android:6e9bb8c2490a0cf07869cd",
+        "android_client_info": {
+          "package_name": "com.example.exchange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767294093624-jq8fo0iq0ieqs57ctie7plqc8t53kf9d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp1VShOjrXMxTA59WARNpedh53aGjFVSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767294093624-jq8fo0iq0ieqs57ctie7plqc8t53kf9d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

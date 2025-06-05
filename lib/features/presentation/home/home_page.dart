@@ -1,9 +1,9 @@
 import 'package:exchange/core/main_function.dart';
 import 'package:exchange/core/main_widget.dart';
+import 'package:exchange/features/presentation/auth/auth_page.dart';
 import 'package:exchange/features/presentation/home/home_getx.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -14,6 +14,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.offAll(AuthPage());
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -43,11 +55,21 @@ class HomePage extends StatelessWidget {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: getx.onShowSaldo,
-                              child: Icon(getx.bShowSaldo.value ? Icons.visibility : Icons.visibility_off, color: Colors.black),
+                              child: Icon(
+                                getx.bShowSaldo.value
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                           SizedBox(width: 5),
-                          w.text(data: 'Rp ${getx.bShowSaldo.value ? getx.dSaldo.value : '*****'}', fontWeight: FontWeight.bold, fontSize: 16),
+                          w.text(
+                            data:
+                                'Rp ${getx.bShowSaldo.value ? getx.dSaldo.value : '*****'}',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ],
                       ),
                     ),
@@ -68,9 +90,16 @@ class HomePage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.file_download_outlined, color: Colors.black),
+                            Icon(
+                              Icons.file_download_outlined,
+                              color: Colors.black,
+                            ),
                             SizedBox(width: 5),
-                            w.text(data: 'Deposit', fontSize: 12, fontWeight: FontWeight.bold),
+                            w.text(
+                              data: 'Deposit',
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ],
                         ),
                       ),
@@ -79,7 +108,10 @@ class HomePage extends StatelessWidget {
                     Expanded(
                       child: w.button(
                         onPressed: () {
-                          f.showSnackBar(titleText: 'Terjadi Masalah!', messageText: '');
+                          f.showSnackBar(
+                            titleText: 'Terjadi Masalah!',
+                            messageText: '',
+                          );
                         },
                         backgroundColor: Colors.blue[100],
                         borderRadius: BorderRadius.circular(32),
@@ -89,7 +121,11 @@ class HomePage extends StatelessWidget {
                           children: [
                             Icon(Icons.attach_money, color: Colors.black),
                             SizedBox(width: 5),
-                            w.text(data: 'Withdraw', fontSize: 12, fontWeight: FontWeight.bold),
+                            w.text(
+                              data: 'Withdraw',
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ],
                         ),
                       ),

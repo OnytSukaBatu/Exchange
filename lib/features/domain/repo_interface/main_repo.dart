@@ -3,4 +3,6 @@ import 'package:exchange/features/data/models/data_model.dart';
 
 abstract class MainRepoInterface {
   Future<Either<String, DataModel>> getData({required String name});
+
+  Future<Either<String, String>> getConfig();
 }

@@ -11,4 +11,8 @@ class MainUsecase {
     Either<String, DataModel> result = await repositoryAPI.getData(name: name);
     return result.map((model) => model.toEntity());
   }
+
+  Future<Either<String, String>> getConfig() async {
+    return await repositoryAPI.getConfig();
+  }
 }
