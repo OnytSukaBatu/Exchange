@@ -30,12 +30,19 @@ class AuthGetx extends GetxController {
   }
 
   void onGoogleLogin() async {
+    f.showLoading();
     await GoogleSignIn().signIn().then((user) async {
+      f.endLoading();
+
       if (user != null) {
         String email = user.email;
         String display = user.displayName ?? '';
         f.onBW(key: Config.stringEmail, value: email);
+
+        f.showLoading();
         await useCase.getUserData(email: email, display: display).then((value) {
+          f.endLoading();
+
           value.fold((left) {}, (right) {
             User user = right;
             f.onBW(key: Config.stringDisplay, value: user.display);

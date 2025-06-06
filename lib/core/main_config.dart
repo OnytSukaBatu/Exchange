@@ -4,7 +4,10 @@ class Config {
   static String stringEmail = 'mobileCacheEmail';
   static String stringDisplay = 'mobilCacheDisplay';
   static String stringData = 'mobileCacheData';
+  static String stringID = 'mobileCacheID';
 
   static String boolTheme = 'mobileCacheTheme';
   static String boolLogin = 'mobileCacheLogin';
+
+  static String doubleTether = 'mobileCacheTether';
 }

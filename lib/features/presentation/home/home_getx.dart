@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
 import 'package:exchange/features/domain/entities/coin_entity.dart';
 import 'package:exchange/features/domain/entities/user_entity.dart';
 import 'package:exchange/features/domain/usecase/main_usecase.dart';
 import 'package:exchange/features/presentation/daftar/daftar_page.dart';
+import 'package:exchange/features/presentation/transaction/transaction_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:exchange/injection_container.dart' as di;
@@ -19,6 +18,7 @@ class HomeGetx extends GetxController {
   RxBool showSaldo = false.obs;
 
   RxList<Coin> listCoin = <Coin>[].obs;
+  RxList myAssets = [].obs;
 
   @override
   void onInit() {
@@ -38,19 +38,15 @@ class HomeGetx extends GetxController {
 
   Future<void> onGetListCoin() async {
     await useCase.getListCoin().then((value) {
-      value.fold(
-        (left) {
-          log(left);
-        },
-        (right) {
-          listCoin.value = right;
-        },
-      );
+      value.fold((left) {}, (right) {
+        listCoin.value = right;
+      });
     });
   }
 
   Future<void> onCheckUser() async {
     saldo.value = 0.0;
+    myAssets.clear();
     List listData = f.onBR(key: Config.stringData).split('|');
     for (String i in listData) {
       List indexData = i.split('~');
@@ -60,7 +56,13 @@ class HomeGetx extends GetxController {
           double totalWhenBuy = double.parse(indexData[2]);
           double difference = right - priceWhenBuy;
           double percentage = (difference / right);
-          saldo.value = saldo.value + (totalWhenBuy + (totalWhenBuy * percentage));
+          double result = (totalWhenBuy + (totalWhenBuy * percentage));
+
+          myAssets.add([indexData[0], result]);
+          if (indexData[0] == 'tether') {
+            f.onBW(key: Config.doubleTether, value: result);
+          }
+          saldo.value = saldo.value + result;
         });
       });
     }
@@ -74,6 +76,12 @@ class HomeGetx extends GetxController {
         User user = right;
         f.onBW(key: Config.stringData, value: user.data);
       });
+    });
+  }
+
+  void onTransaction({required String coinID, required String coinImageUrl, required String coinSymbol}) async {
+    await Get.to(() => TransactionPage(coinID: coinID, coinImageUrl: coinImageUrl, coinSymbol: coinSymbol, data: myAssets))?.then((_) {
+      onRefresh();
     });
   }
 

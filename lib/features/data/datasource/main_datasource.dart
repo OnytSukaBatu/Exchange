@@ -15,9 +15,11 @@ class MainDatasource {
   Future<UserModel> getUserData({required String email}) async {
     final collection = FirebaseFirestore.instance.collection('main-user');
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.where('email', isEqualTo: email).get();
+    String id = querySnapshot.docs.first.id;
+    await f.onSW(key: Config.stringID, value: id);
 
     if (querySnapshot.docs.isEmpty) {
-      Map<String, dynamic> user = {'email': email, 'display': '', 'data': '0'};
+      Map<String, dynamic> user = {'email': email, 'display': '', 'data': 'tether~16000~0'};
       await collection.add(user);
       UserModel.fromJson(user);
     }

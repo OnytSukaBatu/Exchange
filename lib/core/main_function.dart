@@ -68,7 +68,7 @@ class MainFunction {
     titleColor ??= theme.scaffoldBackgroundColor;
     titleFontSize ??= 14;
     titleFontWeight ??= FontWeight.bold;
-    messageColor ??= theme.primaryColor;
+    messageColor ??= theme.scaffoldBackgroundColor;
     messageFontSize ??= 12;
     backgroundColor ??= theme.primaryColor;
     snackPosition ??= SnackPosition.TOP;
@@ -116,6 +116,26 @@ class MainFunction {
     symbol ??= 'IDR ';
     NumberFormat format = NumberFormat.currency(symbol: symbol, decimalDigits: decimal);
     return format.format(value);
+  }
+
+  void showLoading() {
+    ThemeData theme = Theme.of(Get.context!);
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5)),
+        backgroundColor: theme.scaffoldBackgroundColor,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [CircularProgressIndicator(color: theme.primaryColor, backgroundColor: Colors.transparent)],
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void endLoading() {
+    Get.back();
   }
 }
 

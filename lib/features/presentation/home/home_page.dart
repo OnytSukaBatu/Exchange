@@ -68,6 +68,31 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            Obx(
+                              () => Visibility(
+                                visible: getx.showSaldo.value,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    w.text(data: 'Assets Kamu', fontSize: 12, fontWeight: FontWeight.bold),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: getx.myAssets.length,
+                                      itemBuilder: (context, index) {
+                                        List i = getx.myAssets[index];
+                                        return w.text(
+                                          data: '${i[0]} : ${f.currency(value: i[1])}',
+                                          textAlign: TextAlign.left,
+                                          fontSize: 12,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -122,43 +147,50 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       Coin coin = getx.listCoin[index];
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 16,
-                              child: ClipOval(child: CachedNetworkImage(imageUrl: coin.image)),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  w.text(data: coin.symbol.toUpperCase(), fontSize: 12, fontWeight: FontWeight.bold),
-                                  w.text(data: coin.name, fontSize: 10),
-                                ],
-                              ),
-                            ),
-                            IntrinsicWidth(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  w.text(
-                                    data: f.currency(value: coin.currentPrice),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                      return Material(
+                        child: InkWell(
+                          onTap: () {
+                            getx.onTransaction(coinID: coin.id, coinImageUrl: coin.image, coinSymbol: coin.symbol);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 16,
+                                  child: ClipOval(child: CachedNetworkImage(imageUrl: coin.image)),
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      w.text(data: coin.symbol.toUpperCase(), fontSize: 12, fontWeight: FontWeight.bold),
+                                      w.text(data: coin.name, fontSize: 10),
+                                    ],
                                   ),
-                                  w.text(
-                                    data: '${coin.priceChange.toStringAsFixed(2)} %',
-                                    fontSize: 10,
-                                    color: coin.priceChange < 0 ? Colors.red : Colors.green,
+                                ),
+                                IntrinsicWidth(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      w.text(
+                                        data: f.currency(value: coin.currentPrice),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      w.text(
+                                        data: '${coin.priceChange.toStringAsFixed(2)} %',
+                                        fontSize: 10,
+                                        color: coin.priceChange < 0 ? Colors.red : Colors.green,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       );
                     },

@@ -26,7 +26,9 @@ class SettingGetx extends GetxController {
   }
 
   void onLogout() async {
+    f.showLoading();
     await GoogleSignIn().signOut();
+    f.endLoading();
     f.onBW(key: Config.boolLogin, value: false);
     Get.offAll(AuthPage());
   }

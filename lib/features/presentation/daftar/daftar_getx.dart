@@ -4,7 +4,7 @@ import 'package:exchange/core/main_function.dart';
 import 'package:exchange/core/main_widget.dart';
 import 'package:exchange/features/domain/usecase/main_usecase.dart';
 import 'package:exchange/features/presentation/dashboard/dashboard_page.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exchange/injection_container.dart' as di;
 
@@ -18,9 +18,10 @@ class DaftarGetx extends GetxController {
 
   void onLanjut() async {
     if (!globalKey.currentState!.validate()) return;
+    if (!snkValue.value) return;
 
+    f.showLoading();
     String email = f.onBR(key: Config.stringEmail);
-
     CollectionReference collection = FirebaseFirestore.instance.collection('main-user');
     QuerySnapshot querySnapshot = await collection.where('email', isEqualTo: email).get();
 
@@ -30,12 +31,15 @@ class DaftarGetx extends GetxController {
     }
 
     f.onBW(key: Config.stringDisplay, value: controller.text);
-
+    f.endLoading();
     Get.offAll(() => DashboardPage());
   }
 
   void onShowSNK() async {
+    f.showLoading();
     await useCase.getConfig(config: 'snk').then((value) {
+      f.endLoading();
+
       value.fold((left) {}, (right) {
         f.showBottomSheet(
           child: IntrinsicHeight(
@@ -43,7 +47,7 @@ class DaftarGetx extends GetxController {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  w.text(data: right),
+                  w.text(data: right, color: Colors.black),
                   SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
