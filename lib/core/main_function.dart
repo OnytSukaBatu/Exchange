@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
 import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class MainFunction {
   GetStorage box = GetStorage();
@@ -99,6 +104,18 @@ class MainFunction {
       isScrollControlled: true,
       shape: RoundedRectangleBorder(borderRadius: borderRadius),
     );
+  }
+
+  String stringHash(String input) {
+    Uint8List bytes = utf8.encode(input);
+    Digest digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
+  String currency({required double value, String? symbol, int? decimal}) {
+    symbol ??= 'IDR ';
+    NumberFormat format = NumberFormat.currency(symbol: symbol, decimalDigits: decimal);
+    return format.format(value);
   }
 }
 

@@ -2,11 +2,9 @@ import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
 import 'package:exchange/core/main_widget.dart';
 import 'package:exchange/features/domain/entities/coin_entity.dart';
-import 'package:exchange/features/presentation/auth/auth_page.dart';
 import 'package:exchange/features/presentation/home/home_getx.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatelessWidget {
@@ -24,20 +22,10 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: w.text(data: f.onBR(key: Config.stringDisplay), fontSize: 16),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await GoogleSignIn().signOut();
-              f.onBW(key: Config.boolLogin, value: false);
-              Get.offAll(AuthPage());
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: getx.onGetListCoin,
+          onRefresh: getx.onRefresh,
           backgroundColor: theme.primaryColor,
           color: theme.scaffoldBackgroundColor,
           child: SingleChildScrollView(
@@ -72,7 +60,11 @@ class HomePage extends StatelessWidget {
                                     child: InkWell(onTap: getx.onShowSaldo, child: Icon(getx.showSaldo.value ? Icons.visibility : Icons.visibility_off)),
                                   ),
                                   SizedBox(width: 5),
-                                  w.text(data: 'Rp ${getx.showSaldo.value ? getx.saldo.value : '*****'}', fontWeight: FontWeight.bold, fontSize: 16),
+                                  w.text(
+                                    data: getx.showSaldo.value ? f.currency(value: getx.saldo.value) : '*****',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ],
                               ),
                             ),
@@ -153,7 +145,11 @@ class HomePage extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  w.text(data: coin.currentPrice.toString(), fontSize: 12, fontWeight: FontWeight.bold),
+                                  w.text(
+                                    data: f.currency(value: coin.currentPrice),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   w.text(
                                     data: '${coin.priceChange.toStringAsFixed(2)} %',
                                     fontSize: 10,

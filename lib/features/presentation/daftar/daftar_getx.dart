@@ -3,7 +3,7 @@ import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
 import 'package:exchange/core/main_widget.dart';
 import 'package:exchange/features/domain/usecase/main_usecase.dart';
-import 'package:exchange/features/presentation/home/home_page.dart';
+import 'package:exchange/features/presentation/dashboard/dashboard_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:exchange/injection_container.dart' as di;
@@ -31,7 +31,7 @@ class DaftarGetx extends GetxController {
 
     f.onBW(key: Config.stringDisplay, value: controller.text);
 
-    Get.offAll(() => HomePage());
+    Get.offAll(() => DashboardPage());
   }
 
   void onShowSNK() async {

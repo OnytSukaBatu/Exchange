@@ -36,4 +36,14 @@ class MainRepoImplementation extends MainRepoInterface {
       return Left(e.toString());
     }
   }
+
+  @override
+  Future<Either<String, double>> getPrice({required String id}) async {
+    try {
+      double data = await dataSource.getPrice(id: id);
+      return Right(data);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }

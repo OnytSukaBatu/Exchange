@@ -28,10 +28,18 @@ class MainDatasource {
 
   Future<List<CoinModel>> getListCoin() async {
     Response<dynamic> response = await Dio().get(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd',
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=idr',
       options: Options(headers: {'x-cg-demo-api-key': await f.onSR(key: Config.stringAPIKey)}),
     );
     List data = response.data;
     return data.map((item) => CoinModel.fromJson(item)).toList();
+  }
+
+  Future<double> getPrice({required String id}) async {
+    Response<dynamic> response = await Dio().get(
+      'https://api.coingecko.com/api/v3/simple/price?vs_currencies=idr&ids=$id',
+      options: Options(headers: {'x-cg-demo-api-key': await f.onSR(key: Config.stringAPIKey)}),
+    );
+    return double.parse(response.data[id]['idr'].toString());
   }
 }

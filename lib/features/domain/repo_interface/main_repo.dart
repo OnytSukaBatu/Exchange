@@ -8,4 +8,6 @@ abstract class MainRepoInterface {
   Future<Either<String, UserModel>> getUserData({required String email});
 
   Future<Either<String, List<CoinModel>>> getListCoin();
+
+  Future<Either<String, double>> getPrice({required String id});
 }

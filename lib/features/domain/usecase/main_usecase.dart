@@ -22,4 +22,9 @@ class MainUsecase {
     Either<String, List<CoinModel>> result = await repositoryAPI.getListCoin();
     return result.map((coinList) => coinList.map((model) => model.toCoin()).toList());
   }
+
+  Future<Either<String, double>> getPrice({required String id}) async {
+    Either<String, double> result = await repositoryAPI.getPrice(id: id);
+    return result;
+  }
 }

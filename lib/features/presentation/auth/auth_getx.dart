@@ -2,7 +2,7 @@ import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
 import 'package:exchange/features/domain/entities/user_entity.dart';
 import 'package:exchange/features/domain/usecase/main_usecase.dart';
-import 'package:exchange/features/presentation/home/home_page.dart';
+import 'package:exchange/features/presentation/dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -41,7 +41,7 @@ class AuthGetx extends GetxController {
             f.onBW(key: Config.stringDisplay, value: user.display);
             f.onBW(key: Config.stringData, value: user.data);
             f.onBW(key: Config.boolLogin, value: true);
-            Get.offAll(() => HomePage());
+            Get.offAll(() => DashboardPage());
           });
         });
       }
