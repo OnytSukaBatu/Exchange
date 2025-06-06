@@ -1,9 +1,13 @@
+import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
 import 'package:exchange/core/main_widget.dart';
+import 'package:exchange/features/domain/entities/coin_entity.dart';
 import 'package:exchange/features/presentation/auth/auth_page.dart';
 import 'package:exchange/features/presentation/home/home_getx.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -12,14 +16,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        title: w.text(data: f.onBR(key: Config.stringDisplay), fontSize: 16),
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await GoogleSignIn().signOut();
+              f.onBW(key: Config.boolLogin, value: false);
               Get.offAll(AuthPage());
             },
             icon: Icon(Icons.logout),
@@ -27,113 +36,140 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    w.text(data: 'Total saldo anda', fontSize: 12),
-                    SizedBox(height: 5),
-                    Obx(
-                      () => Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: getx.onShowSaldo,
-                              child: Icon(
-                                getx.bShowSaldo.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.black,
+        child: RefreshIndicator(
+          onRefresh: getx.onGetListCoin,
+          backgroundColor: theme.primaryColor,
+          color: theme.scaffoldBackgroundColor,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: theme.scaffoldBackgroundColor,
+                          border: Border.all(color: theme.primaryColor),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            w.text(data: 'Total saldo anda', fontSize: 12),
+                            SizedBox(height: 5),
+                            Obx(
+                              () => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(onTap: getx.onShowSaldo, child: Icon(getx.showSaldo.value ? Icons.visibility : Icons.visibility_off)),
+                                  ),
+                                  SizedBox(width: 5),
+                                  w.text(data: 'Rp ${getx.showSaldo.value ? getx.saldo.value : '*****'}', fontWeight: FontWeight.bold, fontSize: 16),
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(width: 5),
-                          w.text(
-                            data:
-                                'Rp ${getx.bShowSaldo.value ? getx.dSaldo.value : '*****'}',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: w.button(
-                        onPressed: getx.onDeposit,
-                        backgroundColor: Colors.blue[100],
-                        borderRadius: BorderRadius.circular(32),
-                        borderColor: Colors.black,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.file_download_outlined,
-                              color: Colors.black,
-                            ),
-                            SizedBox(width: 5),
-                            w.text(
-                              data: 'Deposit',
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
                           ],
                         ),
                       ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: w.button(
-                        onPressed: () {
-                          f.showSnackBar(
-                            titleText: 'Terjadi Masalah!',
-                            messageText: '',
-                          );
-                        },
-                        backgroundColor: Colors.blue[100],
-                        borderRadius: BorderRadius.circular(32),
-                        borderColor: Colors.black,
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   child: Row(
+                      //     children: [
+                      //       Expanded(
+                      //         child: w.button(
+                      //           onPressed: getx.onDeposit,
+                      //           backgroundColor: theme.scaffoldBackgroundColor,
+                      //           borderRadius: BorderRadius.circular(32),
+                      //           borderColor: theme.primaryColor,
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: [
+                      //               Icon(Icons.file_download_outlined, color: theme.primaryColor),
+                      //               SizedBox(width: 5),
+                      //               w.text(data: 'Deposit', fontSize: 12, fontWeight: FontWeight.bold),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       SizedBox(width: 16),
+                      //       Expanded(
+                      //         child: w.button(
+                      //           onPressed: () {},
+                      //           backgroundColor: theme.scaffoldBackgroundColor,
+                      //           borderRadius: BorderRadius.circular(32),
+                      //           borderColor: theme.primaryColor,
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: [
+                      //               Icon(Icons.attach_money, color: theme.primaryColor),
+                      //               SizedBox(width: 5),
+                      //               w.text(data: 'Withdraw', fontSize: 12, fontWeight: FontWeight.bold),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+                Obx(
+                  () => ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: getx.listCoin.length,
+                    itemBuilder: (context, index) {
+                      Coin coin = getx.listCoin[index];
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.attach_money, color: Colors.black),
-                            SizedBox(width: 5),
-                            w.text(
-                              data: 'Withdraw',
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 16,
+                              child: ClipOval(child: CachedNetworkImage(imageUrl: coin.image)),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  w.text(data: coin.symbol.toUpperCase(), fontSize: 12, fontWeight: FontWeight.bold),
+                                  w.text(data: coin.name, fontSize: 10),
+                                ],
+                              ),
+                            ),
+                            IntrinsicWidth(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  w.text(data: coin.currentPrice.toString(), fontSize: 12, fontWeight: FontWeight.bold),
+                                  w.text(
+                                    data: '${coin.priceChange.toStringAsFixed(2)} %',
+                                    fontSize: 10,
+                                    color: coin.priceChange < 0 ? Colors.red : Colors.green,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

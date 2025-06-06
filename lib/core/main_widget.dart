@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainWidget {
-  Widget text({
-    required String data,
-    bool? softWrap,
-    TextStyle? style,
-    TextAlign? textAlign,
-    Color? color,
-    double? fontSize,
-    FontWeight? fontWeight,
-  }) {
+  Widget text({required String data, bool? softWrap, TextStyle? style, TextAlign? textAlign, Color? color, double? fontSize, FontWeight? fontWeight}) {
+    ThemeData theme = Theme.of(Get.context!);
+
     softWrap ??= true;
     style ??= GoogleFonts.poppins();
     textAlign ??= TextAlign.center;
+    color ??= theme.primaryColor;
 
     return Text(
       data,
       softWrap: softWrap,
-      style: style.copyWith(
-        color: color,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-      ),
+      style: style.copyWith(color: color, fontSize: fontSize, fontWeight: fontWeight),
       textAlign: textAlign,
     );
   }
@@ -41,10 +32,12 @@ class MainWidget {
     Color? borderColor,
     bool? enabled,
   }) {
-    backgroundColor ??= Colors.white;
+    ThemeData theme = Theme.of(Get.context!);
+
+    backgroundColor ??= theme.scaffoldBackgroundColor;
     disabledBackgroundColor ??= Colors.grey;
     borderRadius ??= BorderRadius.zero;
-    borderColor ??= backgroundColor;
+    borderColor ??= theme.primaryColor;
     enabled ??= true;
 
     return ElevatedButton(
@@ -86,15 +79,18 @@ class MainWidget {
     Color? textColor,
     double? fontSize,
     FontWeight? fontWeight,
+    TextStyle? errorStyle,
   }) {
-    cursorColor ??= Colors.black;
+    ThemeData theme = Theme.of(Get.context!);
+
+    cursorColor ??= theme.primaryColor;
     obscureText ??= false;
     readOnly ??= false;
     isDense ??= true;
 
     InputBorder defaultBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
-      borderSide: BorderSide(color: Colors.black),
+      borderSide: BorderSide(color: theme.primaryColor),
     );
 
     disabledBorder ??= OutlineInputBorder(
@@ -104,13 +100,15 @@ class MainWidget {
 
     enabledBorder ??= OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
-      borderSide: BorderSide(color: Colors.black),
+      borderSide: BorderSide(color: theme.primaryColor),
     );
 
     focusedBorder ??= OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
-      borderSide: BorderSide(color: Colors.black, width: 2),
+      borderSide: BorderSide(color: theme.primaryColor, width: 2),
     );
+
+    errorStyle ??= GoogleFonts.poppins(color: Colors.red, fontSize: 12);
 
     return TextFormField(
       controller: controller,
@@ -127,6 +125,7 @@ class MainWidget {
         label: label,
         prefix: prefix,
         suffix: suffix,
+        errorStyle: errorStyle,
       ),
       enabled: enabled,
       initialValue: initialValue,
@@ -136,16 +135,21 @@ class MainWidget {
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
       readOnly: readOnly,
-      style: GoogleFonts.poppins(
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-      ),
+      style: GoogleFonts.poppins(color: textColor, fontSize: fontSize, fontWeight: fontWeight),
       validator: validator,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
     );
+  }
+
+  Widget checkBox({required bool value, required Function(bool?) onChanged, Color? activeColor, Color? checkColor}) {
+    ThemeData theme = Theme.of(Get.context!);
+
+    activeColor ??= theme.primaryColor;
+    checkColor ??= theme.scaffoldBackgroundColor;
+
+    return Checkbox(value: value, onChanged: onChanged, activeColor: activeColor, checkColor: checkColor);
   }
 }
 

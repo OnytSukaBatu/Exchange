@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:exchange/features/data/datasource/main_datasource.dart';
-import 'package:exchange/features/data/models/data_model.dart';
+import 'package:exchange/features/data/models/coin_model.dart';
+import 'package:exchange/features/data/models/user_model.dart';
 import 'package:exchange/features/domain/repo_interface/main_repo.dart';
 
 class MainRepoImplementation extends MainRepoInterface {
@@ -8,9 +9,18 @@ class MainRepoImplementation extends MainRepoInterface {
   MainRepoImplementation(this.dataSource);
 
   @override
-  Future<Either<String, DataModel>> getData({required String name}) async {
+  Future<Either<String, String>> getConfig({required String config}) async {
     try {
-      DataModel model = await dataSource.getData(name: name);
+      return Right(await dataSource.getConfig(config: config));
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, UserModel>> getUserData({required String email}) async {
+    try {
+      UserModel model = await dataSource.getUserData(email: email);
       return Right(model);
     } catch (e) {
       return Left(e.toString());
@@ -18,9 +28,10 @@ class MainRepoImplementation extends MainRepoInterface {
   }
 
   @override
-  Future<Either<String, String>> getConfig() async {
+  Future<Either<String, List<CoinModel>>> getListCoin() async {
     try {
-      return Right(await dataSource.getConfig());
+      List<CoinModel> model = await dataSource.getListCoin();
+      return Right(model);
     } catch (e) {
       return Left(e.toString());
     }

@@ -20,9 +20,7 @@ class MainFunction {
     box.remove(key);
   }
 
-  FlutterSecureStorage storage = FlutterSecureStorage(
-    aOptions: const AndroidOptions(encryptedSharedPreferences: true),
-  );
+  FlutterSecureStorage storage = FlutterSecureStorage(aOptions: const AndroidOptions(encryptedSharedPreferences: true));
 
   Future<void> onSW({required String key, required String value}) async {
     await storage.write(key: key, value: value);
@@ -60,32 +58,22 @@ class MainFunction {
     EdgeInsets? padding,
     SnackPosition? snackPosition,
   }) {
-    titleColor ??= Colors.white;
+    ThemeData theme = Theme.of(Get.context!);
+
+    titleColor ??= theme.scaffoldBackgroundColor;
     titleFontSize ??= 14;
     titleFontWeight ??= FontWeight.bold;
-    messageColor ??= Colors.white;
+    messageColor ??= theme.primaryColor;
     messageFontSize ??= 12;
-    backgroundColor ??= Colors.grey;
+    backgroundColor ??= theme.primaryColor;
     snackPosition ??= SnackPosition.TOP;
-    duration ??= Duration(seconds: 2);
+    duration ??= Duration(seconds: 5);
 
     Get.snackbar(
       '',
       '',
-      titleText: w.text(
-        data: titleText,
-        color: titleColor,
-        fontSize: titleFontSize,
-        fontWeight: titleFontWeight,
-        textAlign: TextAlign.left,
-      ),
-      messageText: w.text(
-        data: messageText,
-        color: messageColor,
-        fontSize: messageFontSize,
-        fontWeight: messageFontWeight,
-        textAlign: TextAlign.left,
-      ),
+      titleText: w.text(data: titleText, color: titleColor, fontSize: titleFontSize, fontWeight: titleFontWeight, textAlign: TextAlign.left),
+      messageText: w.text(data: messageText, color: messageColor, fontSize: messageFontSize, fontWeight: messageFontWeight, textAlign: TextAlign.left),
       animationDuration: Duration(milliseconds: 300),
       backgroundColor: backgroundColor,
       duration: duration,
@@ -94,6 +82,22 @@ class MainFunction {
       padding: padding,
       snackPosition: snackPosition,
       snackStyle: SnackStyle.FLOATING,
+    );
+  }
+
+  Future showBottomSheet({required Widget child, Color? backgroundColor, bool? isDismissible, BorderRadiusGeometry? borderRadius}) {
+    backgroundColor ??= Colors.white;
+    isDismissible ??= true;
+    borderRadius ??= BorderRadius.circular(16);
+
+    return Get.bottomSheet(
+      SafeArea(
+        child: SizedBox(width: Get.width, child: child),
+      ),
+      backgroundColor: backgroundColor,
+      isDismissible: isDismissible,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(borderRadius: borderRadius),
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:exchange/features/data/models/data_model.dart';
+import 'package:exchange/features/data/models/coin_model.dart';
+import 'package:exchange/features/data/models/user_model.dart';
 
 abstract class MainRepoInterface {
-  Future<Either<String, DataModel>> getData({required String name});
+  Future<Either<String, String>> getConfig({required String config});
 
-  Future<Either<String, String>> getConfig();
+  Future<Either<String, UserModel>> getUserData({required String email});
+
+  Future<Either<String, List<CoinModel>>> getListCoin();
 }

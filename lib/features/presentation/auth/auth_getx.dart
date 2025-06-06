@@ -1,9 +1,15 @@
 import 'package:exchange/core/main_config.dart';
 import 'package:exchange/core/main_function.dart';
+import 'package:exchange/features/domain/entities/user_entity.dart';
+import 'package:exchange/features/domain/usecase/main_usecase.dart';
+import 'package:exchange/features/presentation/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:exchange/injection_container.dart' as di;
 
 class AuthGetx extends GetxController {
+  MainUsecase useCase = di.injection<MainUsecase>();
   RxBool isLight = true.obs;
 
   @override
@@ -23,5 +29,22 @@ class AuthGetx extends GetxController {
     isLight.value = f.onBR(key: Config.boolTheme);
   }
 
-  void onGoogleLogin() async {}
+  void onGoogleLogin() async {
+    await GoogleSignIn().signIn().then((user) async {
+      if (user != null) {
+        String email = user.email;
+        String display = user.displayName ?? '';
+        f.onBW(key: Config.stringEmail, value: email);
+        await useCase.getUserData(email: email, display: display).then((value) {
+          value.fold((left) {}, (right) {
+            User user = right;
+            f.onBW(key: Config.stringDisplay, value: user.display);
+            f.onBW(key: Config.stringData, value: user.data);
+            f.onBW(key: Config.boolLogin, value: true);
+            Get.offAll(() => HomePage());
+          });
+        });
+      }
+    });
+  }
 }

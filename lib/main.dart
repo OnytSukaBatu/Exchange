@@ -36,13 +36,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MainPage(),
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: onGetThemeMode(),
-    );
+    return GetMaterialApp(debugShowCheckedModeBanner: false, home: MainPage(), theme: lightTheme, darkTheme: darkTheme, themeMode: onGetThemeMode());
   }
 }
 
@@ -54,14 +48,12 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
-          child: CircularProgressIndicator(
-            color: theme.primaryColor,
-            backgroundColor: Colors.transparent,
-          ),
+          child: CircularProgressIndicator(color: theme.primaryColor, backgroundColor: Colors.transparent),
         ),
       ),
     );
@@ -80,7 +72,7 @@ class MainGetx extends GetxController {
   }
 
   void onGetConfig() async {
-    await useCase.getConfig().then((value) {
+    await useCase.getConfig(config: 'main').then((value) {
       value.fold((left) {}, (right) async {
         List data = right.split('|');
 
@@ -88,10 +80,7 @@ class MainGetx extends GetxController {
         await f.onSW(key: Config.stringAPIKey, value: data[1]);
 
         if (versiAPK != Config.stringVersion) {
-          return f.showSnackBar(
-            titleText: 'versi $versiAPK sudah rilis',
-            messageText: 'harap update aplikasi ke versi terbaru!',
-          );
+          return f.showSnackBar(titleText: 'versi $versiAPK sudah rilis', messageText: 'harap update aplikasi ke versi terbaru!');
         }
 
         if (f.onBR(key: Config.boolLogin, dv: false)) {
